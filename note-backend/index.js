@@ -7,7 +7,15 @@ const app = express();
 
 // middleware
 app.use(express.json());
-app.use(cors());
+const corsOptions = {
+  origin: [
+    "https://noteapp-4-wocu.onrender.com"  // yaha apne frontend ka render URL
+  ],
+  credentials: true, // 👈 allow cookies
+};
+
+app.use(cors(corsOptions));
+
 
 // API routes
 app.use("/api/users", require("./routers/users"));

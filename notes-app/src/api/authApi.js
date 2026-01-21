@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:8120/auth",
+  baseURL: "https://noteapp-4-wocu.onrender.com/auth",
   withCredentials: true,
 });
 
