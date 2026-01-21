@@ -2,8 +2,6 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-
-// --Regsiter--
 export const register = async (req, res) => {
   try {
     let { name, email, password } = req.body;
@@ -19,9 +17,6 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    console.log("REGISTER PASSWORD 👉", password);
-    console.log("REGISTER HASH 👉", hashedPassword);
 
     const user = await User.create({
       name,
@@ -42,25 +37,18 @@ export const register = async (req, res) => {
   }
 };
 
-
-// ----Login----
-
-
+// LOGIN
 export const login = async (req, res) => {
   let { email, password } = req.body;
 
   email = email.toLowerCase().trim();
   password = password.trim();
 
-  console.log("LOGIN BODY 👉", { email, password });
-
   const user = await User.findOne({ email });
   if (!user)
     return res.status(400).json({ message: "Invalid credentials" });
 
   const isMatch = await bcrypt.compare(password, user.password);
-  console.log("PASSWORD MATCH 👉", isMatch);
-
   if (!isMatch)
     return res.status(400).json({ message: "Invalid credentials" });
 
@@ -72,21 +60,19 @@ export const login = async (req, res) => {
 
   res.cookie("token", token, {
     httpOnly: true,
-    sameSite: "lax",
-     secure: false,
+    sameSite: "none", // 👈 for render
+    secure: true,    // 👈 must for https
   });
 
- 
-res.json({ user });
+  res.json({ user });
 };
-
-
 
 // LOGOUT
 export const logout = (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: "none",
+    secure: true,
   });
   res.json({ message: "Logged out successfully" });
 };

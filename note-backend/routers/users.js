@@ -1,9 +1,13 @@
-const express = require("express");
+import express from "express";
+import { register, login, me, logout } from "../controllers/authController.js";
+import authMiddleware from "../middleware/authMiddleware.js";
+
+
 const router = express.Router();
 
-// test route
-router.get("/", (req, res) => {
-  res.json({ message: "Users API working" });
-});
+router.post("/register", register);
+router.post("/login", login);
+router.get("/me", authMiddleware, me);
+router.post("/logout", logout);
 
-module.exports = router;
+export default router;

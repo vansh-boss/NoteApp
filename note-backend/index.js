@@ -2,50 +2,35 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 require("dotenv").config();
+import usersRouter from "./routers/users.js";
+
 
 const app = express();
-
-// middleware
 app.use(express.json());
+
 const allowedOrigins = [
-  "https://noteapp-4-wocu.onrender.com", // primary frontend URL
-  "https://noteapp-5-t4tm.onrender.com", // second frontend URL
+  "http://localhost:5173",
+  "https://noteapp-6-mqwv.onrender.com",
 ];
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // mobile apps, curl etc
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-};
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
 
-app.use(cors(corsOptions));
-;
+app.options("*", cors({ origin: allowedOrigins, credentials: true }));
 
 
-// API routes
-app.use("/api/users", require("./routers/users"));
+app.use("/auth", usersRouter);
 
-app.get("/api/test", (req, res) => {
-  res.send("Backend working");
-});
-
-// ✅ CORRECT frontend path
+// serve frontend
 const frontendPath = path.join(__dirname, "../notes-app/dist");
-
 app.use(express.static(frontendPath));
+app.get("*", (req, res) =>
+  res.sendFile(path.join(frontendPath, "index.html"))
+);
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(frontendPath, "index.html"));
-});
-
-// port
 const PORT = process.env.PORT || 8120;
-app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
-});
+app.listen(PORT, () => console.log("Server running on " + PORT));
