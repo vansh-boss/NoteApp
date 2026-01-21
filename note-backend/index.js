@@ -14,18 +14,35 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-app.use(express.json());
-app.use(cookieParser());
+
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://noteapp-6-mqwv.onrender.com",
+  process.env.FRONTEND_URL
 ];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
 
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.options("*", cors({ origin: allowedOrigins, credentials: true }));
 
 app.use("/auth", authRouter);
+
+
+app.use(express.json());
+app.use(cookieParser());
 
 // frontend
 const frontendPath = path.join(__dirname, "../notes-app/dist");
