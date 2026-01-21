@@ -1,6 +1,6 @@
 import { useNotes } from "../context/NotesContext";
 import NoteForm from "../components/NoteForm";
-import NoteCard from "../components/NoteCard/jsx";
+import NoteCard from "../components/NoteCard/.jsx";
 
 
 
