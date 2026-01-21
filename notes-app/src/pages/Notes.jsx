@@ -1,6 +1,6 @@
 import jsPDF from "jspdf";
 import { useNotes } from "../context/NotesContext";
-import NoteCard from "../components/NoteCard";
+import NoteCard from "../components/NoteCard.jsx";
 
 const Notes = () => {
   const { notes, deleteNote, editNote } = useNotes();

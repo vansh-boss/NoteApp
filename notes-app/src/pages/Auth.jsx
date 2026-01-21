@@ -1,7 +1,7 @@
 import React from 'react'
 import Login from "../pages/Login"
 import Register from '../pages/Regsiter'
-import Navbar from '../Components/Navbar'
+import Navbar from '../components/Navbar.jsx'
 
 
 const Auth = () => {
